@@ -1345,7 +1345,7 @@
     // Countdown Timer (48h a partir da primeira visita)
     (function() {
       const KEY = 'hiit30_expiry';
-      const DURATION = 48 * 60 * 60 * 1000;
+      const DURATION = 24 * 60 * 60 * 1000;
       let expiry = parseInt(localStorage.getItem(KEY));
       if (!expiry || expiry < Date.now()) {
         expiry = Date.now() + DURATION;
