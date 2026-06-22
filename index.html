@@ -750,6 +750,55 @@
       font-size: 0.82rem;
     }
 
+    /* ─── COUNTDOWN ─────────────────────────────── */
+    .countdown-wrap {
+      margin: 1.6rem 0 0.5rem;
+      text-align: center;
+    }
+    .countdown-label {
+      font-size: 0.82rem;
+      color: #f87171;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.7rem;
+    }
+    .countdown-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #1a1a1a;
+      border: 1px solid #2d2d2d;
+      border-radius: 8px;
+      padding: 0.5rem 0.9rem;
+      min-width: 60px;
+    }
+    .countdown-unit span {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #f87171;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .countdown-unit small {
+      font-size: 0.65rem;
+      color: #6B7280;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 0.2rem;
+    }
+    .countdown-sep {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #f87171;
+      margin-bottom: 1rem;
+    }
+
     /* ─── FOOTER ────────────────────────────────── */
     footer {
       border-top: 1px solid var(--preto-borda);
@@ -818,6 +867,17 @@
       <p class="hero-sub fade-up">
         O Método HIIT 30 foi criado especialmente para mulheres acima dos 40 que querem emagrecer de verdade, sem sofrimento, sem dieta maluca e em apenas 30 minutos por dia.
       </p>
+
+      <div class="countdown-wrap fade-up">
+        <p class="countdown-label">Oferta por tempo limitado. Expira em:</p>
+        <div class="countdown-display">
+          <div class="countdown-unit"><span id="cd-h">00</span><small>horas</small></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span id="cd-m">00</span><small>min</small></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-unit"><span id="cd-s">00</span><small>seg</small></div>
+        </div>
+      </div>
 
       <div class="hero-cta-wrap fade-up">
         <a href="https://pay.kiwify.com.br/M33xqp4" class="btn-cta btn-pulse" target="_blank" rel="noopener">
@@ -1101,6 +1161,17 @@
           Acesso imediato por<br/>apenas <span>R$ 47</span>
         </h2>
 
+        <div class="countdown-wrap fade-up">
+          <p class="countdown-label">Esta oferta expira em:</p>
+          <div class="countdown-display">
+            <div class="countdown-unit"><span id="cd-h2">00</span><small>horas</small></div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit"><span id="cd-m2">00</span><small>min</small></div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit"><span id="cd-s2">00</span><small>seg</small></div>
+          </div>
+        </div>
+
         <p class="preco-de fade-up">De R$ 197,00</p>
 
         <div class="preco-principal fade-up">
@@ -1270,6 +1341,33 @@
     }, { threshold: 0.12 });
 
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Countdown Timer (48h a partir da primeira visita)
+    (function() {
+      const KEY = 'hiit30_expiry';
+      const DURATION = 48 * 60 * 60 * 1000;
+      let expiry = parseInt(localStorage.getItem(KEY));
+      if (!expiry || expiry < Date.now()) {
+        expiry = Date.now() + DURATION;
+        localStorage.setItem(KEY, expiry);
+      }
+      function pad(n) { return String(n).padStart(2, '0'); }
+      function tick() {
+        const diff = Math.max(0, expiry - Date.now());
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        const hh = pad(h), mm = pad(m), ss = pad(s);
+        document.getElementById('cd-h').textContent  = hh;
+        document.getElementById('cd-m').textContent  = mm;
+        document.getElementById('cd-s').textContent  = ss;
+        document.getElementById('cd-h2').textContent = hh;
+        document.getElementById('cd-m2').textContent = mm;
+        document.getElementById('cd-s2').textContent = ss;
+        if (diff > 0) setTimeout(tick, 1000);
+      }
+      tick();
+    })();
 
     // FAQ accordion
     function toggleFaq(btn) {
